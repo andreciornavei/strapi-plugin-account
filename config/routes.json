@@ -1,0 +1,17 @@
+{
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/account/register",
+      "handler": "account.create",
+      "config": {
+        "policies": [
+          "plugins::users-permissions.ratelimit"
+        ],
+        "prefix": "",
+        "description": "Register a new user with the default role",
+        "validator": "plugins.account.config.validators.create"
+      }
+    }
+  ]
+}

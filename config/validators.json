@@ -1,0 +1,7 @@
+{
+  "validators": {
+    "create": {
+      "model": "plugins.users-permissions.models.user"      
+    }
+  }
+}

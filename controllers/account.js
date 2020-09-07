@@ -45,7 +45,7 @@ module.exports = {
         params.confirmed = true;
       }
 
-      for (param in params) {
+      for (const param in params) {
         if (typeof params[param] === "object") {
           // const relations = await strapi.query()
           const relation = await strapi.query(param).create(params[param])

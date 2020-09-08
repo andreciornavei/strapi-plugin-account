@@ -40,15 +40,25 @@ module.exports = async (ctx) => {
       params.confirmed = true;
     }
 
-    const user = await strapi.connections.default.transaction(async (transacting) => {
-      for (const param in params) {
-        if (typeof params[param] === "object") {
-          const relation = await strapi.query(param).create(params[param], { transacting })
-          params[param] = relation.id
-        }
+    // const user = await strapi.connections.default.transaction(async (transacting) => {
+    // for (const param in params) {
+    //   if (typeof params[param] === "object") {
+    //     const relation = await strapi.query(param).create(params[param], { transacting })
+    //     params[param] = relation.id
+    //   }
+    // }
+    // await strapi.query('user', 'users-permissions').create(params, { transacting });
+    // })
+
+    for (const param in params) {
+      const model = _.get(strapi, `plugins.users-permissions.models.user.attributes.${param}.model`)
+      if (_.get(strapi, `models.${model}`)) {
+        const relation = await strapi.query(param).create(params[param])
+        params[param] = relation.id
       }
-      return await strapi.query('user', 'users-permissions').create(params, { transacting });
-    })
+    }
+
+    const user = await strapi.query('user', 'users-permissions').create(params);
 
     const jwt = strapi.plugins['users-permissions'].services.jwt.issue(
       _.pick(user.toJSON ? user.toJSON() : user, ['id'])
@@ -101,6 +111,7 @@ module.exports = async (ctx) => {
           html: settings.message,
         });
       } catch (err) {
+        console.log(err)
         return ctx.badRequest(null, err);
       }
     }
@@ -119,6 +130,7 @@ module.exports = async (ctx) => {
       });
     }
   } catch (err) {
+    console.log(err)
     ctx.status = 400
     ctx.body = formatError({
       id: 'unknown error',

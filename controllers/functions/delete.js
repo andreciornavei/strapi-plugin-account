@@ -6,16 +6,16 @@ module.exports = async (ctx) => {
     return ctx.badRequest(null, [{ messages: [{ id: 'No authorization header was found' }] }]);
   }
 
-  await strapi.connections.default.transaction(async (transacting) => {
+  // await strapi.connections.default.transaction(async (transacting) => {
     const userFields = sanitizeUser(user);
     for (const param in userFields) {
       const model = _.get(strapi, `plugins.users-permissions.models.user.attributes.${param}.model`)
       if (_.get(strapi, `models.${model}`)) {
-        userFields[param] = await strapi.query(model).delete({ id: userFields[param] }, { transacting })
+        userFields[param] = await strapi.query(model).delete({ id: userFields[param] }/*, { transacting }*/)
       }
     }
-    await strapi.query("user", "users-permissions").delete({ id: user.id }, { transacting })
-  })
+    await strapi.query("user", "users-permissions").delete({ id: user.id }/*, { transacting }*/)
+  // })
 
   ctx.code = 204;
   ctx.body = "User deleted";

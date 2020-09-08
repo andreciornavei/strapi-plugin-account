@@ -9,19 +9,33 @@ module.exports = async (ctx) => {
 
   try {
 
-    const sanitizedUser = await strapi.connections.default.transaction(async (transacting) => {
-      const params = ctx.request.body;
-      for (const param in params) {
-        const model = _.get(strapi, `plugins.users-permissions.models.user.attributes.${param}.model`)
-        if (_.get(strapi, `models.${model}`)) {
-          await strapi.query(param).update({ id: user[param] }, params[param], { transacting })
-          delete params[param]
-        }
+
+    // const sanitizedUser = await strapi.connections.default.transaction(async (transacting) => {
+    //   const params = ctx.request.body;
+    //   for (const param in params) {
+    //     const model = _.get(strapi, `plugins.users-permissions.models.user.attributes.${param}.model`)
+    //     if (_.get(strapi, `models.${model}`)) {
+    //       await strapi.query(param).update({ id: user[param] }, params[param], { transacting })
+    //       delete params[param]
+    //     }
+    //   }
+    //   const updatedUser = await strapi.query('user', 'users-permissions').update({ id: user.id }, params, { transacting });
+    //   return sanitizeEntity(user.toJSON ? user.toJSON() : updatedUser, {
+    //     model: strapi.query('user', 'users-permissions').model,
+    //   });
+    // });
+
+    const params = ctx.request.body;
+    for (const param in params) {
+      const model = _.get(strapi, `plugins.users-permissions.models.user.attributes.${param}.model`)
+      if (_.get(strapi, `models.${model}`)) {
+        await strapi.query(param).update({ id: user[param] }, params[param])
+        delete params[param]
       }
-      const updatedUser = await strapi.query('user', 'users-permissions').update({ id: user.id }, params, { transacting });
-      return sanitizeEntity(user.toJSON ? user.toJSON() : updatedUser, {
-        model: strapi.query('user', 'users-permissions').model,
-      });
+    }
+    const updatedUser = await strapi.query('user', 'users-permissions').update({ id: user.id }, params);
+    const sanitizedUser = sanitizeEntity(user.toJSON ? user.toJSON() : updatedUser, {
+      model: strapi.query('user', 'users-permissions').model,
     });
 
     ctx.send({

@@ -2,15 +2,112 @@
   "routes": [
     {
       "method": "POST",
-      "path": "/account/register",
+      "path": "/register",
       "handler": "account.create",
       "config": {
         "policies": [
           "plugins::users-permissions.ratelimit"
         ],
-        "prefix": "",
         "description": "Register a new user with the default role",
         "validator": "plugins.account.config.validators.create"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth",
+      "handler": "account.auth",
+      "config": {
+        "policies": [
+          "plugins::users-permissions.ratelimit"
+        ],
+        "description": "Login a user using the identifiers email and password"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/me",
+      "handler": "account.me",
+      "config": {
+        "policies": [],
+        "description": "Retrieve the logged in user information"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/me",
+      "handler": "account.update",
+      "config": {
+        "policies": [],
+        "description": "Update the logged in user information"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/me",
+      "handler": "account.delete",
+      "config": {
+        "policies": [],
+        "description": "Delete the logged in user"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/*",
+      "handler": "account.connect",
+      "config": {
+        "policies": [
+          "plugins::users-permissions.ratelimit"
+        ],
+        "description": "Connect a provider"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/:provider/callback",
+      "handler": "account.auth",
+      "config": {
+        "policies": [],
+        "description": "Successfull redirection after approving a provider"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/forgot-password",
+      "handler": "account.forgotPassword",
+      "config": {
+        "policies": [
+          "plugins::users-permissions.ratelimit"
+        ],
+        "description": "Send the reset password email link"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/reset-password",
+      "handler": "account.resetPassword",
+      "config": {
+        "policies": [
+          "plugins::users-permissions.ratelimit"
+        ],
+        "description": "Reset user password with a code (resetToken)"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/email-confirmation",
+      "handler": "account.emailConfirmation",
+      "config": {
+        "policies": [],
+        "description": "Validate a user account"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/send-email-confirmation",
+      "handler": "account.sendEmailConfirmation",
+      "config": {
+        "policies": [],
+        "description": "Send a confirmation email to user"
       }
     }
   ]

@@ -9,7 +9,6 @@ module.exports = async (ctx) => {
 
   try {
 
-
     const sanitizedUser = await strapi.connections.default.transaction(async (transacting) => {
       const params = ctx.request.body;
       for (const param in params) {

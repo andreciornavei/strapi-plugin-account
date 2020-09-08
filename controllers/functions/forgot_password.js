@@ -1,5 +1,5 @@
 'use strict';
-const { _, emailRegExp, formatError, crypto } = require("./../utils")
+const { _, emailRegExp, formatError, randomBytes } = require("./../utils")
 
 module.exports = async (ctx) => {
   let { email } = ctx.request.body;
@@ -40,7 +40,7 @@ module.exports = async (ctx) => {
   }
 
   // Generate random token.
-  const resetPasswordToken = crypto.randomBytes(64).toString('hex');
+  const resetPasswordToken = await randomBytes(64).toString('hex');
 
   const settings = await pluginStore.get({ key: 'email' }).then(storeEmail => {
     try {

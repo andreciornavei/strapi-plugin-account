@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const crypto = require('crypto');
+const {randomBytes} = require("crypto");
 const { sanitizeEntity, getAbsoluteServerUrl } = require('strapi-utils');
 const sanitizeUser = user => sanitizeEntity(user, { model: strapi.query('user', 'users-permissions').model });
 const formatError = error => [
@@ -9,7 +9,7 @@ const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 
 module.exports = {
   _, 
-  crypto,
+  randomBytes,
   getAbsoluteServerUrl,
   sanitizeEntity, 
   sanitizeUser,

@@ -38,7 +38,9 @@
       "handler": "account.update",
       "config": {
         "policies": [],
-        "description": "Update the logged in user information"
+        "description": "Update the logged in user information",
+        "validator": "plugins.account.config.validators.create",
+        "validator_ignore_required": true
       }
     },
     {

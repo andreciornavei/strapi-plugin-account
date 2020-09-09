@@ -17,6 +17,6 @@ module.exports = async (ctx) => {
     await strapi.query("user", "users-permissions").delete({ id: user.id }/*, { transacting }*/)
   // })
 
-  ctx.code = 204;
-  ctx.body = "User deleted";
+  ctx.status = 204;
+  ctx.body = "";
 }
